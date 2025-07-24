@@ -13,8 +13,8 @@ class DummyDataSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            CarProductCategorySeeder::class,
-            CarProductSeeder::class,
+            BookProductCategorySeeder::class,
+            BookProductSeeder::class,
             ProductCollectionSeeder::class,
         ]);
     }

@@ -16,30 +16,35 @@ class MenuSeeder extends Seeder
                 'order' => 1
             ],
             [
-                'name' => 'Products',
-                'url' => '/products',
+                'name' => 'Books',
+                'url' => '/books',
                 'order' => 2,
                 'children' => [
-                    ['name' => 'All Products', 'url' => '/products', 'order' => 1],
-                    ['name' => 'Categories', 'url' => '/products/categories', 'order' => 2],
-                    ['name' => 'New Arrivals', 'url' => '/products/new-arrivals', 'order' => 3],
-                    ['name' => 'Sale', 'url' => '/products/sale', 'order' => 4],
+                    ['name' => 'All Books', 'url' => '/books', 'order' => 1],
+                    ['name' => 'Fiction', 'url' => '/books/fiction', 'order' => 2],
+                    ['name' => 'Non-Fiction', 'url' => '/books/non-fiction', 'order' => 3],
+                    ['name' => 'Science Fiction', 'url' => '/books/science-fiction', 'order' => 4],
+                    ['name' => 'Mystery & Thriller', 'url' => '/books/mystery-thriller', 'order' => 5],
+                    ['name' => 'Romance', 'url' => '/books/romance', 'order' => 6],
+                    ['name' => 'Biography & Memoir', 'url' => '/books/biography-memoir', 'order' => 7],
+                    ['name' => 'Children\'s Books', 'url' => '/books/childrens-books', 'order' => 8],
+                    ['name' => 'Academic & Textbooks', 'url' => '/books/academic-textbooks', 'order' => 9],
                 ]
             ],
             [
-                'name' => 'Shop',
-                'url' => '/shop',
+                'name' => 'Categories',
+                'url' => '/categories',
                 'order' => 3,
                 'children' => [
-                    ['name' => 'Men', 'url' => '/shop/men', 'order' => 1],
-                    ['name' => 'Women', 'url' => '/shop/women', 'order' => 2],
-                    ['name' => 'Kids', 'url' => '/shop/kids', 'order' => 3],
-                    ['name' => 'Accessories', 'url' => '/shop/accessories', 'order' => 4],
+                    ['name' => 'Best Sellers', 'url' => '/categories/best-sellers', 'order' => 1],
+                    ['name' => 'New Releases', 'url' => '/categories/new-releases', 'order' => 2],
+                    ['name' => 'Coming Soon', 'url' => '/categories/coming-soon', 'order' => 3],
+                    ['name' => 'Sale Books', 'url' => '/categories/sale', 'order' => 4],
                 ]
             ],
             [
-                'name' => 'Blog',
-                'url' => '/blog',
+                'name' => 'Book Reviews',
+                'url' => '/reviews',
                 'order' => 4
             ],
             [
@@ -53,7 +58,7 @@ class MenuSeeder extends Seeder
                 ]
             ],
             [
-                'name' => 'About',
+                'name' => 'About Us',
                 'url' => '/about',
                 'order' => 6
             ],

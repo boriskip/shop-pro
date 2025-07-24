@@ -10,12 +10,12 @@ class SiteSettingsSeeder extends Seeder
     public function run()
     {
         $settings = [
-            'name' => config('app.name', 'Liberu Real Estate'),
+            'name' => config('app.name', 'Igakerta Bookstore'),
             'currency' => '£',
             'default_language' => 'en',
-            'address' => '123 Real Estate St, London, UK',
-            'country' => 'United Kingdom',
-            'email' => 'info@liberurealestate.com',
+            'address' => 'Petukangan Utara Pesanggrahan Jakarta Selatan DKI Jakarta 12260',
+            'country' => 'Indonesia',
+            'email' => 'info@igakerta.com',
         ];
 
         foreach ($settings as $setting => $value) {
