@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -20,12 +21,17 @@ class HomeController extends Controller
     {
         $featuredProducts = Product::where('is_featured', true)->take(6)->get();
         $latestProducts = Product::latest()->take(6)->get();
+        // Get categories for the homepage (first 4 categories)
+        $categories = ProductCategory::whereNull('parent_category_id')
+            ->take(4)
+            ->get();
         // Assuming 'specialOffers' is a method or scope on the Product model that retrieves special offers
         // $specialOffers = Product::specialOffers()->get();
 
         return view('home', [
             'featuredProducts' => $featuredProducts,
             'latestProducts' => $latestProducts,
+            'categories' => $categories,
             'specialOffers' => [], //$specialOffers,
         ]);
     }
