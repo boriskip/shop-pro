@@ -2,88 +2,76 @@
 
 namespace App\Services;
 
-use App\Models\ShippingMethod;
 use Illuminate\Support\Facades\Http;
 
 class ShippingService
 {
     public function getAvailableShippingMethods($cart = null, $address = null)
     {
-        // Get all shipping methods
-        $availableMethods = ShippingMethod::all();
-
-        if (!$cart || !$address) {
-            return $availableMethods;
-        }
-
-        // Filter methods based on package weight, dimensions, and destination
-        return $availableMethods->filter(function ($method) use ($cart, $address) {
-            return $this->isMethodAvailable($method, $cart, $address);
-        });
+        // Return default shipping methods (without database)
+        return collect([
+            (object)[
+                'id' => 1,
+                'name' => 'Standard Shipping',
+                'base_rate' => 9.99,
+                'max_weight' => 50,
+                'weight_rate' => 0.5,
+            ],
+            (object)[
+                'id' => 2,
+                'name' => 'Express Shipping',
+                'base_rate' => 19.99,
+                'max_weight' => 100,
+                'weight_rate' => 0.75,
+            ],
+            (object)[
+                'id' => 3,
+                'name' => 'Overnight Shipping',
+                'base_rate' => 39.99,
+                'max_weight' => 100,
+                'weight_rate' => 1.0,
+            ],
+        ]);
     }
 
-    public function calculateShippingCost(ShippingMethod $method, $cart, $address)
+    public function calculateShippingCost($method, $cart, $address = null)
     {
-        // Implement logic to calculate shipping cost based on the method, cart contents, and address
-        $baseRate = $method->base_rate;
-        $weightRate = $this->calculateWeightRate($method, $cart);
-        $distanceRate = $this->calculateDistanceRate($method, $address);
+        // Calculate shipping cost based on method and cart weight
+        if (is_object($method)) {
+            $baseRate = $method->base_rate;
+            $weightRate = $method->weight_rate ?? 0.5;
+        } else {
+            // If method is ID or array, use defaults
+            $baseRate = 9.99;
+            $weightRate = 0.5;
+        }
 
-        return $baseRate + $weightRate + $distanceRate;
+        $totalWeight = $this->calculateTotalWeight($cart);
+        return round($baseRate + ($totalWeight * $weightRate), 2);
     }
 
     public function verifyAddress($address)
     {
-        // Implement address verification logic
-        // This is a placeholder implementation. In a real-world scenario, you would integrate with an address verification API.
-        $response = Http::get('https://api.address-verifier.com', [
-            'address' => $address,
-            'api_key' => config('services.address_verifier.api_key'),
-        ]);
-
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        return null;
-    }
-
-    private function isMethodAvailable($method, $cart, $address)
-    {
-        // Implement logic to check if the shipping method is available for the given cart and address
-        // This is a simplified example. You would need to implement more complex logic based on your specific requirements.
-        $totalWeight = $this->calculateTotalWeight($cart);
-        $maxWeight = $method->max_weight;
-
-        return $totalWeight <= $maxWeight;
-    }
-
-    private function calculateWeightRate($method, $cart)
-    {
-        $totalWeight = $this->calculateTotalWeight($cart);
-        return $totalWeight * $method->weight_rate;
-    }
-
-    private function calculateDistanceRate($method, $address)
-    {
-        // Implement logic to calculate distance-based rate
-        // This is a placeholder. You would need to integrate with a distance calculation service.
-        return 0;
+        // Simple address verification - just check if it's not empty
+        return !empty($address);
     }
 
     private function calculateTotalWeight($cart)
     {
-        return array_sum(array_map(function ($item) {
-            return $item['weight'] * $item['quantity'];
-        }, $cart));
+        $totalWeight = 0;
+        foreach ($cart as $item) {
+            $weight = $item['weight'] ?? 1; // Default weight 1kg if not set
+            $totalWeight += $weight * $item['quantity'];
+        }
+        return $totalWeight;
     }
 
-    public function calculateDropShippingCost(ShippingMethod $method, $cart, $address)
+    public function calculateDropShippingCost($method, $cart, $address = null)
     {
         // Add a small premium for drop shipping
         $standardCost = $this->calculateShippingCost($method, $cart, $address);
         $dropShippingPremium = config('shipping.drop_shipping_premium', 2.00);
 
-        return $standardCost + $dropShippingPremium;
+        return round($standardCost + $dropShippingPremium, 2);
     }
 }

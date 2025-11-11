@@ -36,6 +36,10 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Product routes
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::post('/wishlist/share', [WishlistController::class, 'share'])->name('wishlist.share');
+Route::get('/wishlist/shared/{shareToken}', [WishlistController::class, 'sharedWishlist'])->name('wishlist.shared');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
@@ -69,7 +73,7 @@ Route::get('/orders', [OrderHistoryController::class, 'index'])->name('orders.in
 Route::get('/orders/{id}', [OrderHistoryController::class, 'show'])->name('orders.show');
 
 Route::prefix('payment_methods')->group(function () {
-    Route::get('/', [PaymentMethodController::class,'index'])->name('payment_methods.index');
+    Route::get('/', [PaymentMethodController::class, 'index'])->name('payment_methods.index');
     Route::post('/store', [PaymentMethodController::class, 'addPaymentMethod'])->name('payment_methods.store');
     Route::get('/edit/{id}', [PaymentMethodController::class, 'editPaymentMethod'])->name('payment_methods.edit');
     Route::post('/update/{id}', [PaymentMethodController::class, 'editPaymentMethod'])->name('payment_methods.update');
@@ -129,4 +133,4 @@ Route::view('/account', 'account')->middleware('auth')->name('about');
 
 // Blog routes
 
-require __DIR__.'/socialstream.php';
+require __DIR__ . '/socialstream.php';

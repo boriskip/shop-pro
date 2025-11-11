@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Livewire\Livewire;
 use App\Modules\ModuleManager;
 use App\Modules\ModuleServiceProvider;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Livewire::component('cart-count', \App\Http\Livewire\CartCount::class);
+        Livewire::component('shopping-cart', \App\Http\Livewire\ShoppingCart::class);
     }
 }

@@ -69,8 +69,14 @@ class Product extends Model implements Orderable
 
     public function getImageUrlAttribute()
     {
-        return $this->featured_image;
-        // return asset(Storage::url($this->featured_image));
+        $image = $this->featured_image;
+
+        // Если нет картинки или это плейсхолдер, используем picsum.photos
+        if (empty($image) || str_contains($image, 'placeholder.com')) {
+            return 'https://picsum.photos/640/480?random=' . $this->id;
+        }
+
+        return $image;
     }
 
     public function cartItems()

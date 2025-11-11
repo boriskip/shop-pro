@@ -57,7 +57,7 @@ class ShoppingCart extends Component
         }
 
         Session::put('cart', $this->items);
-        $this->emit('cartUpdated');
+        $this->dispatch('cartUpdated');
         session()->flash('success', 'Product added to cart successfully!');
     }
 
@@ -78,14 +78,15 @@ class ShoppingCart extends Component
             return;
         }
 
-        if (!is_int($quantity) || $quantity < 1) {
+        $quantity = (int)$quantity;
+        if ($quantity < 1) {
             $this->addError('quantity', 'Quantity must be a positive integer');
             return;
         }
 
         $this->items[$productId]['quantity'] = $quantity;
         Session::put('cart', $this->items);
-        $this->emit('cartUpdated');
+        $this->dispatch('cartUpdated');
     }
 
     public function removeItem($productId)

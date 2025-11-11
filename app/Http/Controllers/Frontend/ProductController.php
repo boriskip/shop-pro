@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\BrowsingHistory;
 use App\Services\RecommendationService;
 use Illuminate\Http\Request;
@@ -25,7 +26,18 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $products = QueryBuilder::for(Product::class)
+        $query = Product::query();
+
+        // Filter by category if provided
+        if ($request->has('category') && !empty($request->get('category'))) {
+            $categorySlug = $request->get('category');
+            $query->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug)
+                    ->orWhere('name', 'LIKE', '%' . $categorySlug . '%');
+            });
+        }
+
+        $products = QueryBuilder::for($query)
             ->allowedFilters([
                 'name',
                 'price',
@@ -37,7 +49,10 @@ class ProductController extends Controller
             ->paginate(config('pagination.per_page'))
             ->appends($request->query());
 
-        return view('products.index', compact('products'));
+        // Get all categories for sidebar
+        $categories = ProductCategory::all();
+
+        return view('products.index', compact('products', 'categories'));
     }
 
     public function show(Product $product)

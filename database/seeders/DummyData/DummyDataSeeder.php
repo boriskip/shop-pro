@@ -15,6 +15,7 @@ class DummyDataSeeder extends Seeder
         $this->call([
             BookProductCategorySeeder::class,
             BookProductSeeder::class,
+            ProductWithImagesSeeder::class,
             ProductCollectionSeeder::class,
         ]);
     }
